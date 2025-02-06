@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUSTWORTY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Make_transaction.css' %}">
+    
+    <style>
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Navbar Styles */
+        .navbar-brand img {
+            max-height: 80px;
+            width: auto;
+        }
+        
+        /* Hero Slider Styles */
+        .carousel-item {
+            height: 70vh;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-content {
+            color: white;
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .carousel-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .carousel-content h1 {
+                font-size: 2rem;
+            }
+            .carousel-content p {
+                font-size: 1rem;
+            }
+            .carousel-item {
+                height: 50vh;
+            }
+        }
+        /* Main Content Section Styles */
+        .main-content {
+            padding: 40px 0;
+            background-color: #f4f4f4;
+        }
+         /* Footer Styles */
+         footer {
+            background-color: #2b3ae7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #f39c12;
+        }
+
+        footer h3, footer h4 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <!-- Logo Space -->
+            <a class="navbar-brand" href="#" style="display: flex; align-items: center;">
+                <img src="{% static 'img/SUSHIL-removebg-preview.png' %}" style="height: 90px; ">
+                <p class="brand-name" style="margin-right: 10px; font-size: 30px; font-weight: bold; text-transform: uppercase;">TRUSTWORTY</p>
+
+            </a>
+
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <!-- Messages Block -->
+                <div class="container mt-3">
+                    {% if messages %}
+                    <div class="alert alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                        </div>
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+            </div>
+                    <!--Accounts Dropdown-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url 'account_list' %}" role="button" data-bs-toggle="dropdown">
+                            Accounts
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'account_list' %}">Savings Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account_list' %}">Current Account</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Transactions Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Transactions
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'transfer_money' %}">Transfer Money</a></li>
+                            <li><a class="dropdown-item" href="{% url 'deposit_money' %}">Deposit Money</a></li>
+                            <li><a class="dropdown-item" href="{% url 'withdraw_money' %}">Withdraw Money</a></li>
+                            <li><a class="dropdown-item" href="{% url 'transaction_list' %}">Transaction History</a></li>
+                        </ul>
+                    </li>
+
+
+                    <!-- Payments Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Payments
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'confirm_payment' %}">Transaction Payment</a></li>
+                            
+                        </ul>
+                    </li>
+                
+                   
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">My Account</a>
+                        <ul class="dropdown-menu">
+                        {% if user.is_authenticated %}
+                        <li> <a  class="dropdown-item"  href="{% url 'logout' %}">Logout</a></li>
+                            
+                        {% else %}
+                            <a  class="dropdown-item" href="{% url 'login' %}">Login</a>
+                        
+                            <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li> 
+                        {% endif %}
+                        </ul>
+                    </li>
+                    <!-- Admin Panel Link -->
+
+                
+                     <ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li></ul>
+                        
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact-footer">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+{% block content %}
+    <!-- Hero Slider Section -->
+
+<div id="heroSlider" class="carousel slide" data-bs-ride="carousel">
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2"></button>
+    </div>
+        <!-- Slides -->
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active" style="background-image: url('https://picsum.photos/1920/1080');">
+                <div class="carousel-overlay">
+                    <div class="carousel-content">
+                        <h1>Welcome to Online Banking</h1>
+                        <p>Experience seamless banking services from the comfort of your home.</p>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/1920/1081');">
+                <div class="carousel-overlay">
+                    <div class="carousel-content">
+                        <h1>Easy  To Money Transfer</h1>
+                        <p>Effortless Transfer, Anytime, Anywhere.</p>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/1920/1082');">
+                <div class="carousel-overlay">
+                    <div class="carousel-content">
+                        <h1>Secure Payments</h1>
+                        <p>Make safe and secure payments anytime, anywhere.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4"><B>  🌏 WELCOME TO TRUSTWORTY 🌏 </B></h2>
+            <p><B>Discover a seamless banking experience with Trustworthy Savings. From hassle-free savings accounts to flexible loans and secure online payments, we offer everything you need to manage your finances with confidence and ease. Join us today and take the first step towards financial freedom!</B></p>
+            <!-- Add more sections or content here as needed -->
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Contact Us Footer (This goes at the bottom of the page) -->
+    <footer id="contact-footer">
+        <div class="container">
+          <!-- Contact Information -->
+          <div style="margin-bottom: 20px;">
+            <h3>Contact Us</h3>
+            <p><strong>Phone:</strong> +91 123-456-7890</p>
+            <p><strong>Email:</strong> trustworty118@gmail.com</p>
+            <p><strong>Address:</strong> 123 Bank Street, Mumbai, Maharashtra, India</p>
+          </div>
+      </footer>
+  
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

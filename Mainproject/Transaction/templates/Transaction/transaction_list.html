@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/Make_transaction.css' %}">
+<style>
+    .filter-form {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .filter-form select, .filter-form button {
+        padding: 10px;
+        font-size: 16px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .filter-form button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+    }
+
+    .filter-form button:hover {
+        background-color: #45a049;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="wrapper">
+        <div class="title">Transaction List</div>
+
+        <!-- Filter Form -->
+        <form method="get" class="filter-form">
+            <label for="type">Filter by Type:</label>
+            <select name="type" id="type">
+                <option value="">All</option>
+                <option value="Deposit" {% if request.GET.type == 'Deposit' %}selected{% endif %}>Deposit</option>
+                <option value="Withdrawal" {% if request.GET.type == 'Withdrawal' %}selected{% endif %}>Withdrawal</option>
+                <option value="Transfer" {% if request.GET.type == 'Transfer' %}selected{% endif %}>Transfer</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        Transaction Table
+        
+        {% if transactions %}
+        <table>
+            <tr>
+                <th>Sender Account</th>
+                <th>Receiver Account</th>
+                <th>Transaction Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+            </tr>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.sender_account }}</td>
+                <td>{{ transaction.receiver_account }}</td>
+                <td>{{ transaction.transaction_type }}</td>
+                <td>&#8377; {{ transaction.amount }}</td>
+                <td>{{ transaction.date|date:"d M Y, h:i A" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p style="text-align: center; font-size: 18px; color: #555;">No transactions found for the selected type.</p>
+        {% endif %}
+
+        <div class="action-link">
+            <form action="{% url 'Make_transaction' %}" method="get">
+                <button type="submit" class="btn">Make a New Transaction</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

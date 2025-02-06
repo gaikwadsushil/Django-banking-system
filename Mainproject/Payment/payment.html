@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script type="text/javascript">
+    function initiatePayment(paymentData) {
+        var options = {
+            "key": "{{ RAZORPAY_KEY_ID }}", // Set Razorpay Key ID here
+            "amount": paymentData.amount * 100, // Amount in paise
+            "currency": "INR", // Currency
+            "order_id": paymentData.order_id, // Order ID from backend
+            "name": "Your Business Name",
+            "description": "Transaction",
+            "image": "https://example.com/your-logo.png",
+            "handler": function (response) {
+                // On successful payment, call the backend to verify payment
+                var paymentVerificationData = {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature
+                };
+
+                fetch("{% url 'confirm_payment' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentVerificationData),
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        alert("Payment Successful!");
+                    } else {
+                        alert("Payment Failed!");
+                    }
+                });
+            },
+            "prefill": {
+                "name": "John Doe",
+                "email": "john@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+</script>
+<button onclick="initiatePayment(paymentData)">Pay Now</button>
+{% endblock %}

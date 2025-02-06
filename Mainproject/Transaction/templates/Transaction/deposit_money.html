@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/Make_transaction.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Deposit Money</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Deposit</button>
+    </form>
+</div>
+{% endblock %}
